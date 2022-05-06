@@ -1,7 +1,7 @@
 import {DefaultEventsMap} from "@socket.io/component-emitter";
 import {NextPage} from "next";
 import {useRouter} from "next/router";
-import {useEffect, useState} from "react";
+import {useEffect, useRef, useState} from "react";
 import {io, Socket} from "socket.io-client";
 import {EVENTS} from "../events/events";
 import moment, {Moment} from "moment";
@@ -35,11 +35,14 @@ const Room: NextPage = () => {
     return () => clearInterval(interval);
   }, [timer])
 
+  const musicPlayer = useRef<HTMLAudioElement | undefined>(
+    typeof Audio !== "undefined" ? new Audio('https://interactive-examples.mdn.mozilla.net/media/cc0-audio/t-rex-roar.mp3') : undefined
+  );
+
   useEffect(() => {
     if (timer) {
       if (timer.seconds() === 0 && timer.minutes() === 0) {
-        const audio = new Audio('https://interactive-examples.mdn.mozilla.net/media/cc0-audio/t-rex-roar.mp3');
-        audio.play();
+        musicPlayer.current?.play();
 
         clearInterval(interval)
       }
